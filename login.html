@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Крипто Кошелек</title>
+    <style>
+        :root {
+            --bg-color: #17212b;
+            --text-color: #ffffff;
+            --button-color: #2ea6ff;
+            --secondary-bg: #232f3d;
+            --accent-color: #50a8eb;
+            --success-color: #31b545;
+            --danger-color: #eb5545;
+            --tg-gradient: linear-gradient(135deg, #32B5FF 0%, #0072FF 100%);
+            --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --card-radius: 16px;
+            --button-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 380px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--tg-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+        }
+
+        .auth-card {
+            background: var(--secondary-bg);
+            border-radius: var(--card-radius);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--button-radius);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(46, 166, 255, 0.2);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: var(--button-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--tg-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-link {
+            background: transparent;
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 10px;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: var(--button-radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-danger {
+            background: rgba(235, 85, 69, 0.1);
+            border: 1px solid rgba(235, 85, 69, 0.3);
+            color: var(--danger-color);
+        }
+
+        .alert-success {
+            background: rgba(49, 181, 69, 0.1);
+            border: 1px solid rgba(49, 181, 69, 0.3);
+            color: var(--success-color);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .auth-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .toggle-form {
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Крипто Кошелек</h1>
+            <p>Управляйте своими криптоактивами</p>
+        </div>
+
+        <div class="alert alert-danger" id="error-alert"></div>
+        <div class="alert alert-success" id="success-alert"></div>
+
+        <!-- Форма входа -->
+        <div class="auth-card" id="login-form">
+            <h2 style="margin-bottom: 20px;">Вход в аккаунт</h2>
+            <form id="login">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="Введите ваш email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Пароль</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="Введите ваш пароль" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+            <div class="toggle-form">
+                <p>Нет аккаунта? <a href="#" id="show-register">Зарегистрироваться</a></p>
+            </div>
+        </div>
+
+        <!-- Форма регистрации -->
+        <div class="auth-card" id="register-form" style="display: none;">
+            <h2 style="margin-bottom: 20px;">Регистрация</h2>
+            <form id="register">
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" class="form-control" placeholder="Введите ваш email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Пароль</label>
+                    <input type="password" id="register-password" class="form-control" placeholder="Создайте пароль" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password-confirm">Подтверждение пароля</label>
+                    <input type="password" id="register-password-confirm" class="form-control" placeholder="Подтвердите пароль" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </form>
+            <div class="toggle-form">
+                <p>Уже есть аккаунт? <a href="#" id="show-login">Войти</a></p>
+            </div>
+        </div>
+
+        <div class="auth-footer">
+            <p>© 2025 Крипто Кошелек. Все права защищены.</p>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        // Проверяем, авторизован ли пользователь
+        if (API.isAuthenticated()) {
+            window.location.href = 'index.html';
+        }
+
+        // Переключение между формами входа и регистрации
+        document.getElementById('show-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        });
+
+        document.getElementById('show-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('register-form').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        });
+
+        // Функция для отображения ошибок
+        function showError(message) {
+            const errorAlert = document.getElementById('error-alert');
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Функция для отображения успешных сообщений
+        function showSuccess(message) {
+            const successAlert = document.getElementById('success-alert');
+            successAlert.textContent = message;
+            successAlert.style.display = 'block';
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Обработка формы входа
+        document.getElementById('login').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Валидация email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Пожалуйста, введите корректный email');
+                return;
+            }
+            
+            // Валидация пароля
+            if (password.length < 1) {
+                showError('Пожалуйста, введите пароль');
+                return;
+            }
+            
+            try {
+                const response = await API.login(email, password);
+                if (response.access_token) {
+                    showSuccess('Вход выполнен успешно!');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                } else if (response.detail) {
+                    showError(response.detail);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                if (error.message && error.message.includes('Failed to fetch')) {
+                    showError('Ошибка соединения с сервером. Пожалуйста, проверьте подключение к интернету.');
+                } else if (error.message) {
+                    showError(error.message);
+                } else {
+                    showError('Ошибка при входе. Пожалуйста, проверьте ваши данные.');
+                }
+            }
+        });
+
+        // Обработка формы регистрации
+        document.getElementById('register').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const passwordConfirm = document.getElementById('register-password-confirm').value;
+            
+            // Валидация email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Пожалуйста, введите корректный email');
+                return;
+            }
+            
+            // Валидация пароля
+            if (password.length < 6) {
+                showError('Пароль должен содержать не менее 6 символов');
+                return;
+            }
+            
+            // Проверка совпадения паролей
+            if (password !== passwordConfirm) {
+                showError('Пароли не совпадают');
+                return;
+            }
+            
+            try {
+                const response = await API.register(email, password);
+                if (response.access_token) {
+                    showSuccess('Регистрация успешна! Перенаправление...');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                } else if (response.detail) {
+                    showError(response.detail);
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                if (error.message && error.message.includes('Failed to fetch')) {
+                    showError('Ошибка соединения с сервером. Пожалуйста, проверьте подключение к интернету.');
+                } else {
+                    showError('Ошибка при регистрации. Пожалуйста, попробуйте еще раз.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

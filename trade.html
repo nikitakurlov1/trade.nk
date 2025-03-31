@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Торговля</title>
+    <style>
+        :root {
+            --bg-color: #17212b;
+            --text-color: #ffffff;
+            --button-color: #2ea6ff;
+            --secondary-bg: #232f3d;
+            --accent-color: #50a8eb;
+            --success-color: #31b545;
+            --danger-color: #eb5545;
+            --tg-gradient: linear-gradient(135deg, #32B5FF 0%, #0072FF 100%);
+            --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --card-radius: 16px;
+            --button-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 10px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            background: var(--secondary-bg);
+            border-radius: var(--button-radius);
+            padding: 12px 15px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar:focus-within {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-bar i {
+            margin-right: 10px;
+            color: var(--text-color);
+        }
+
+        .trending {
+            margin-bottom: 30px;
+        }
+
+        .trending h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            padding-left: 5px;
+            position: relative;
+        }
+        
+        .trending h2:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 18px;
+            background: var(--tg-gradient);
+            border-radius: 3px;
+        }
+
+        .trending .ads {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 5px;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        .trending .ads::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .trending .ads .ad {
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+            background: var(--secondary-bg);
+            border-radius: var(--card-radius);
+            min-width: 120px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .trending .ads .ad:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .trending .ads .ad .coin-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            background: var(--tg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+        }
+        
+        .trending .ads .ad span {
+            font-weight: 600;
+            font-size: 16px;
+            display: block;
+        }
+        
+        .trending .ads .ad .price {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+        
+        .trending .ads .ad .change {
+            font-size: 14px;
+            color: var(--success-color);
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-7px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        .coins-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 80px;
+        }
+
+        .coin {
+            background: var(--secondary-bg);
+            padding: 15px;
+            border-radius: var(--card-radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coin:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+        
+        .coin:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--tg-gradient);
+            border-radius: 4px 0 0 4px;
+        }
+        
+        .coin-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .coin-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--tg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(0, 114, 255, 0.2);
+        }
+        
+        .coin-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .coin-name {
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .coin-name .favorite-icon {
+            margin-left: 5px;
+            color: var(--accent-color);
+            display: none;
+        }
+        
+        .coin-name .favorite-icon.active {
+            display: inline;
+        }
+        
+        .coin-symbol {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        .coin-info .market-cap {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 2px;
+        }
+        
+        .coin-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .coin-price {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .coin-change {
+            font-size: 14px;
+            color: var(--success-color);
+        }
+
+        .footer {
+            background: var(--secondary-bg);
+            padding: 15px 0 25px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-btn {
+            color: var(--text-color);
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding: 0 15px;
+        }
+
+        .footer-btn:hover {
+            color: var(--button-color);
+            transform: translateY(-3px);
+        }
+        
+        .footer-btn.active {
+            color: var(--button-color);
+        }
+        
+        .footer-btn.active:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background: var(--button-color);
+            border-radius: 50%;
+        }
+
+        .footer-btn i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-bar">
+            <i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 20L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg></i>
+            <input type="text" id="searchInput" placeholder="Поиск монеты..." oninput="filterCoins()">
+        </div>
+
+        <div class="trending">
+            <h2>В тренде</h2>
+            <div class="ads" id="adsContainer">
+                <!-- Динамически загружаемые рекламные объявления -->
+            </div>
+        </div>
+
+        <div class="coins-list" id="coinsList">
+            <!-- Динамически загружаемые монеты -->
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-btn" onclick="showWallet()">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 8V6C19 4.89543 18.1046 4 17 4H7C5.89543 4 5 4.89543 5 6V18C5 19.1046 5.89543 20 7 20H17C18.1046 20 19 19.1046 19 18V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16 12H20V16H16C14.8954 16 14 15.1046 14 14C14 12.8954 14.8954 12 16 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="16" cy="14" r="1" fill="currentColor"/>
+            </svg></i>
+            Кошелек
+        </div>
+        <div class="footer-btn active" onclick="showTrade()">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 17L9 11L13 15L21 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17 7H21V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></i>
+            Торговля
+        </div>
+        <div class="footer-btn" onclick="showHistory()">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+            </svg></i>
+            История
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        // Проверяем аутентификацию
+        if (!API.checkAuth()) {
+            window.location.href = 'login.html';
+        }
+
+        // Загружаем список монет
+        async function loadCoins() {
+            try {
+                const coins = await API.getCoins();
+                const userCoins = await API.getUserCoins();
+                const userData = await API.getUserInfo();
+                const favorites = userData.favorites || [];
+                
+                // Очищаем список монет
+                const coinsList = document.querySelector('.coins-list');
+                coinsList.innerHTML = '';
+                
+                // Добавляем монеты в список
+                coins.forEach(coin => {
+                    // Находим монету пользователя, если она есть
+                    const userCoin = userCoins.find(c => c.symbol === coin.symbol);
+                    const balance = userCoin ? userCoin.balance : 0;
+                    const isFavorite = favorites.includes(coin.symbol);
+                    
+                    // Создаем элемент монеты
+                    const coinElement = document.createElement('div');
+                    coinElement.className = 'coin';
+                    coinElement.onclick = () => goToCoin(coin.symbol);
+                    
+                    // Используем изменение цены из данных монеты или генерируем случайное
+                    const change = coin.priceChange24h || (Math.random() * 5 - 2).toFixed(2);
+                    const changeColor = change >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
+                    
+                    // Форматируем капитализацию
+                    const marketCap = formatLargeNumber(coin.marketCap || 0);
+                    
+                    coinElement.innerHTML = `
+                        <div class="coin-left">
+                            <div class="coin-icon">${coin.symbol.charAt(0)}</div>
+                            <div class="coin-info">
+                                <div class="coin-name">
+                                    ${coin.name}
+                                    <span class="favorite-icon ${isFavorite ? 'active' : ''}">
+                                        ★
+                                    </span>
+                                </div>
+                                <div class="coin-symbol">${coin.symbol}</div>
+                                <div class="market-cap">Капитализация: $${marketCap}</div>
+                            </div>
+                        </div>
+                        <div class="coin-right">
+                            <div class="coin-price">
+                                <div class="price">$${coin.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                                <div class="change" style="color: ${changeColor}">${change > 0 ? '+' : ''}${change}%</div>
+                            </div>
+                            <div class="coin-arrow">
+                                <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1.5 1L6.5 6L1.5 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                    `;
+                    
+                    coinsList.appendChild(coinElement);
+                });
+                
+                // Добавляем монеты в trending
+                const trending = document.querySelector('.trending .ads');
+                trending.innerHTML = '';
+                
+                // Сначала показываем избранные монеты, затем случайные
+                let trendingCoins = [];
+                
+                // Добавляем избранные монеты
+                const favoriteCoins = coins.filter(coin => favorites.includes(coin.symbol));
+                trendingCoins = [...favoriteCoins];
+                
+                // Если избранных монет меньше 5, добавляем случайные
+                if (trendingCoins.length < 5) {
+                    const nonFavoriteCoins = coins.filter(coin => !favorites.includes(coin.symbol));
+                    const shuffled = [...nonFavoriteCoins].sort(() => 0.5 - Math.random());
+                    const selected = shuffled.slice(0, 5 - trendingCoins.length);
+                    trendingCoins = [...trendingCoins, ...selected];
+                }
+                
+                trendingCoins.forEach(coin => {
+                    const change = coin.priceChange24h || (Math.random() * 5 - 2).toFixed(2);
+                    const changeColor = change >= 0 ? 'var(--success-color)' : 'var(--danger-color)';
+                    const isFavorite = favorites.includes(coin.symbol);
+                    
+                    const adElement = document.createElement('div');
+                    adElement.className = 'ad';
+                    adElement.onclick = () => goToCoin(coin.symbol);
+                    
+                    adElement.innerHTML = `
+                        <div class="coin-icon">${coin.symbol.charAt(0)}</div>
+                        <span>${coin.symbol} ${isFavorite ? '★' : ''}</span>
+                        <div class="price">$${coin.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        <div class="change" style="color: ${changeColor}">${change > 0 ? '+' : ''}${change}%</div>
+                    `;
+                    
+                    trending.appendChild(adElement);
+                });
+                
+                // Обновляем время последнего обновления
+                API.updateLastUpdateTime();
+                
+                // Обновляем данные каждые 30 секунд
+                setTimeout(loadCoins, 30000);
+                
+            } catch (error) {
+                console.error('Error loading coins:', error);
+                alert('Ошибка при загрузке списка монет');
+            }
+        }
+        
+        // Форматирование больших чисел (миллионы, миллиарды)
+        function formatLargeNumber(num) {
+            if (num >= 1000000000) {
+                return (num / 1000000000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' млрд';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' млн';
+            } else {
+                return num.toLocaleString();
+            }
+        }
+        
+        // Функция для перехода на страницу монеты
+        function goToCoin(symbol) {
+            window.location.href = `coin.html?coin=${symbol}`;
+        }
+        
+        // Загружаем монеты при загрузке страницы
+        loadCoins();
+        
+        // Обработчик для поиска
+        document.querySelector('.search-bar input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const coins = document.querySelectorAll('.coin');
+            
+            coins.forEach(coin => {
+                const name = coin.querySelector('.coin-name').textContent.toLowerCase();
+                const symbol = coin.querySelector('.coin-symbol').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || symbol.includes(searchTerm)) {
+                    coin.style.display = 'flex';
+                } else {
+                    coin.style.display = 'none';
+                }
+            });
+        });
+
+        function showWallet() {
+            window.location.href = 'index.html'; // Переход на страницу кошелька
+        }
+
+        function showTrade() {
+            window.location.href = 'trade.html'; // Переход на страницу торговли
+        }
+
+        function showHistory() {
+            window.location.href = 'history.html'; // Переход на страницу истории
+        }
+
+        function filterCoins() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const coinsList = document.getElementById('coinsList');
+            const coins = coinsList.getElementsByClassName('coin');
+
+            for (let i = 0; i < coins.length; i++) {
+                const coin = coins[i];
+                const coinName = coin.getElementsByTagName('span')[0].textContent;
+                if (coinName.toLowerCase().indexOf(filter) > -1) {
+                    coin.style.display = '';
+                } else {
+                    coin.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

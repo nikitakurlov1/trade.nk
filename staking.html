@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стейкинг</title>
+    <style>
+        :root {
+            --bg-color: #17212b;
+            --text-color: #ffffff;
+            --button-color: #2ea6ff;
+            --secondary-bg: #232f3d;
+            --accent-color: #50a8eb;
+            --success-color: #31b545;
+            --danger-color: #eb5545;
+            --selected-color: #1e90ff;
+            --selected-border: 3px solid #ffffff;
+            --tg-gradient: linear-gradient(135deg, #32B5FF 0%, #0072FF 100%);
+            --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --card-radius: 16px;
+            --button-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            flex: 1;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: var(--button-radius);
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .back-btn:before {
+            content: '←';
+            margin-right: 5px;
+            font-size: 18px;
+        }
+
+        .staking-info {
+            text-align: center;
+            margin: 40px 0 30px;
+            padding: 25px;
+            background: var(--secondary-bg);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .staking-info:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tg-gradient);
+        }
+
+        .staking-info h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .staking-info p {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            background: var(--secondary-bg);
+            padding: 20px;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-group:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tg-gradient);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: var(--button-radius);
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .form-group input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(46, 166, 255, 0.3);
+        }
+
+        .form-group input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        .form-group input[type="number"]::-webkit-outer-spin-button,
+        .form-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .available-balance {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .available-balance span {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .duration-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .duration-btn {
+            padding: 15px;
+            border-radius: var(--card-radius);
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .duration-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tg-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .duration-btn:hover {
+            transform: translateY(-5px);
+        }
+        
+        .duration-btn:hover:before {
+            opacity: 1;
+        }
+
+        .duration-btn.selected {
+            background: var(--secondary-bg);
+            border: 2px solid var(--button-color);
+            transform: translateY(-5px);
+        }
+        
+        .duration-btn.selected:before {
+            opacity: 1;
+        }
+        
+        .duration-days {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .duration-rate {
+            font-size: 14px;
+            color: var(--success-color);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: var(--button-radius);
+            background: var(--tg-gradient);
+            color: var(--text-color);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
+        }
+        
+        .action-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(0, 114, 255, 0.4);
+        }
+
+        .staking-details {
+            margin-top: 30px;
+            background: var(--secondary-bg);
+            padding: 25px;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .staking-details:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tg-gradient);
+        }
+
+        .staking-details p {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .staking-details p span:last-child {
+            font-weight: 600;
+        }
+        
+        .staking-details .reward {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 15px 0;
+            text-align: center;
+            background: var(--tg-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .staking-details .progress {
+            background: var(--bg-color);
+            border-radius: 20px;
+            overflow: hidden;
+            height: 12px;
+            margin: 20px 0;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .staking-details .progress-bar {
+            height: 100%;
+            background: var(--tg-gradient);
+            width: 0;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(50, 181, 255, 0.5);
+        }
+
+        .withdraw-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: var(--button-radius);
+            background: var(--success-color);
+            color: var(--text-color);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(49, 181, 69, 0.3);
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .withdraw-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(49, 181, 69, 0.4);
+        }
+        
+        .withdraw-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(49, 181, 69, 0.4);
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(49, 181, 69, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(49, 181, 69, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(49, 181, 69, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="coin.html" class="back-btn">Назад</a>
+        <div class="staking-info">
+            <h1 id="coinName">Монета</h1>
+            <p>Введите сумму стейкинга и выберите срок</p>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Сумма стейкинга</label>
+            <input type="number" id="amount" placeholder="Введите сумму">
+            <div class="available-balance">Доступный баланс: <span id="availableBalance">0.00</span> монет</div>
+        </div>
+
+        <div class="duration-buttons">
+            <div class="duration-btn" onclick="selectDuration(7, 1.6, this)">
+                <div class="duration-days">7 дней</div>
+                <div class="duration-rate">1.6% в день</div>
+            </div>
+            <div class="duration-btn" onclick="selectDuration(14, 2.1, this)">
+                <div class="duration-days">14 дней</div>
+                <div class="duration-rate">2.1% в день</div>
+            </div>
+            <div class="duration-btn" onclick="selectDuration(30, 2.6, this)">
+                <div class="duration-days">30 дней</div>
+                <div class="duration-rate">2.6% в день</div>
+            </div>
+        </div>
+
+        <div class="action-btn" onclick="createStaking()">Создать</div>
+
+        <div class="staking-details" id="stakingDetails" style="display: none;">
+            <p><span>Сумма стейкинга:</span> <span id="stakingAmount">0</span> <span id="coinSymbol">BTC</span></p>
+            <div class="reward">+<span id="stakingReward">0</span> <span id="coinSymbol2">BTC</span></div>
+            <p><span>Ставка:</span> <span id="stakingRate">0</span>% в день</p>
+            <p><span>Срок:</span> <span id="stakingDuration">0</span> дней</p>
+            <div class="progress">
+                <div class="progress-bar" id="stakingProgress"></div>
+            </div>
+            <p><span>Прошло времени:</span> <span id="stakingTime">0</span> дней</p>
+            <p><span>Статус:</span> <span id="stakingStatus" style="color: var(--success-color)">Активный</span></p>
+            <div class="withdraw-btn" id="withdrawBtn" style="display: none;" onclick="withdrawStaking()">Получить награду</div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        let selectedDuration = 0;
+        let selectedRate = 0;
+        let currentCoin = '';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentCoin = urlParams.get('coin');
+
+            try {
+                const coin = await API.getCoin(currentCoin);
+                document.getElementById('coinName').textContent = coin.name;
+                document.getElementById('availableBalance').textContent = coin.balance;
+                
+                // Устанавливаем символ монеты везде, где он нужен
+                const coinSymbolElements = document.querySelectorAll('#coinSymbol, #coinSymbol2');
+                coinSymbolElements.forEach(el => {
+                    el.textContent = coin.symbol;
+                });
+                
+                // Добавляем обработчик для кнопки назад
+                document.querySelector('.back-btn').href = `coin.html?coin=${currentCoin}`;
+            } catch (error) {
+                alert('Ошибка при загрузке информации о монете');
+            }
+        });
+
+        function selectDuration(duration, rate, element) {
+            selectedDuration = duration;
+            selectedRate = rate;
+
+            document.querySelectorAll('.duration-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        async function createStaking() {
+            const amount = parseFloat(document.getElementById('amount').value);
+
+            if (amount > 0 && selectedDuration > 0) {
+                try {
+                    const data = await API.createStaking(currentCoin, amount, selectedDuration);
+                    showStakingDetails(data);
+                    
+                    // Обновляем отображаемый баланс монеты
+                    const userCoins = await API.getUserCoins();
+                    const userCoin = userCoins.find(c => c.symbol === currentCoin);
+                    if (userCoin) {
+                        document.getElementById('availableBalance').textContent = userCoin.balance;
+                    }
+                } catch (error) {
+                    console.error('Error creating staking:', error);
+                    alert('Ошибка при создании стейкинга: ' + error.message);
+                }
+            } else {
+                alert('Введите корректную сумму и выберите срок стейкинга');
+            }
+        }
+
+        function showStakingDetails(data) {
+            document.getElementById('stakingAmount').textContent = data.amount;
+            document.getElementById('stakingReward').textContent = data.reward.toFixed(2);
+            document.getElementById('stakingRate').textContent = data.rate;
+            document.getElementById('stakingDuration').textContent = selectedDuration;
+            document.getElementById('stakingDetails').style.display = 'block';
+
+            let daysPassed = 0;
+            const interval = setInterval(() => {
+                daysPassed++;
+                document.getElementById('stakingTime').textContent = daysPassed;
+                document.getElementById('stakingProgress').style.width = `${(daysPassed / selectedDuration) * 100}%`;
+
+                if (daysPassed >= selectedDuration) {
+                    clearInterval(interval);
+                    document.getElementById('withdrawBtn').style.display = 'block';
+                    document.getElementById('stakingStatus').textContent = 'Завершен';
+                    document.getElementById('stakingStatus').style.color = 'var(--button-color)';
+                }
+            }, 1000); // Ускорено для демонстрации, 1 день = 1 секунда
+        }
+
+        async function withdrawStaking() {
+            try {
+                const stakingAmount = parseFloat(document.getElementById('stakingAmount').textContent);
+                const stakingReward = parseFloat(document.getElementById('stakingReward').textContent);
+                const totalAmount = stakingAmount + stakingReward;
+                
+                // Получаем текущие монеты пользователя
+                let userCoins = await API.getUserCoins();
+                let userCoin = userCoins.find(c => c.symbol === currentCoin);
+                
+                if (!userCoin) {
+                    userCoin = {
+                        symbol: currentCoin,
+                        balance: 0
+                    };
+                    userCoins.push(userCoin);
+                }
+                
+                // Увеличиваем баланс монеты пользователя
+                userCoin.balance += totalAmount;
+                
+                // Сохраняем обновленные данные
+                localStorage.setItem('user_coins', JSON.stringify(userCoins));
+                
+                // Добавляем транзакцию
+                await API.addTransaction(`withdraw staking ${currentCoin}`, totalAmount);
+                
+                // Обновляем отображаемый баланс
+                document.getElementById('availableBalance').textContent = userCoin.balance;
+                
+                // Скрываем детали стейкинга
+                document.getElementById('stakingDetails').style.display = 'none';
+                
+                alert(`Стейкинг успешно завершен! Вы получили ${totalAmount.toFixed(2)} ${currentCoin}`);
+            } catch (error) {
+                console.error('Error withdrawing staking:', error);
+                alert('Ошибка при выводе средств из стейкинга: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

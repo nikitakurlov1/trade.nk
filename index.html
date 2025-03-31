@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Крипто Кошелек</title>
+    <style>
+        :root {
+            --bg-color: #17212b;
+            --text-color: #ffffff;
+            --button-color: #2ea6ff;
+            --secondary-bg: #232f3d;
+            --accent-color: #50a8eb;
+            --success-color: #31b545;
+            --danger-color: #eb5545;
+            --tg-gradient: linear-gradient(135deg, #32B5FF 0%, #0072FF 100%);
+            --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --card-radius: 16px;
+            --button-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 10px;
+        }
+
+        .balance-card {
+            background: var(--secondary-bg);
+            padding: 30px;
+            margin: 20px 0 30px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            border-radius: var(--card-radius);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .balance-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tg-gradient);
+        }
+
+        .balance-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .total-balance {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 15px 0;
+            background: var(--tg-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 15px;
+            padding: 0 5px;
+        }
+
+        .square-btn {
+            width: 90px;
+            height: 90px;
+            border-radius: var(--card-radius);
+            background: var(--secondary-bg);
+            border: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .square-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--tg-gradient);
+        }
+
+        .square-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 114, 255, 0.3);
+        }
+
+        .square-btn:active {
+            transform: translateY(0);
+        }
+
+        .circle-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--tg-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 10px rgba(0, 114, 255, 0.3);
+        }
+
+        .circle-icon i {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .square-btn span {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .profile-card {
+            background: var(--secondary-bg);
+            border-radius: var(--card-radius);
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--tg-gradient);
+        }
+        
+        .profile-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: var(--tg-gradient);
+            margin-right: 20px;
+            box-shadow: 0 4px 10px rgba(0, 114, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .profile-info {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+        }
+
+        .profile-info p {
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .profile-info p span:last-child {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .footer {
+            background: var(--secondary-bg);
+            padding: 15px 0 25px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-btn {
+            color: var(--text-color);
+            text-align: center;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding: 0 15px;
+        }
+
+        .footer-btn:hover {
+            color: var(--button-color);
+            transform: translateY(-3px);
+        }
+        
+        .footer-btn.active {
+            color: var(--button-color);
+        }
+        
+        .footer-btn.active:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background: var(--button-color);
+            border-radius: 50%;
+        }
+
+        .footer-btn i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="balance-card">
+            <div class="balance-label">Общий баланс</div>
+            <div class="total-balance">
+                <span id="balance">0.00</span>
+                <span style="font-size: 0.6em;">$</span>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <div class="square-btn" onclick="window.location.href='trade.html'">
+                <div class="circle-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4V20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4 12H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <span>Купить</span>
+            </div>
+            <div class="square-btn" onclick="window.location.href='trade.html'">
+                <div class="circle-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 12H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <span>Продать</span>
+            </div>
+            <div class="square-btn" onclick="window.location.href='staking.html'">
+                <div class="circle-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4V8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M12 16V20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M6 8L6 16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M18 8L18 16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M6 12H18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <span>Стейкинг</span>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">U</div>
+                <h2>Мой профиль</h2>
+            </div>
+            <div class="profile-info">
+                <p><span>ID</span> <span>12345678</span></p>
+                <p><span>Статус</span> <span style="color: var(--success-color)">Активный</span></p>
+                <p><span>Верификация</span> <span>Базовый</span></p>
+                <p><span>Регистрация</span> <span>01.01.2024</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-btn active" onclick="showWallet()">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 8V6C19 4.89543 18.1046 4 17 4H7C5.89543 4 5 4.89543 5 6V18C5 19.1046 5.89543 20 7 20H17C18.1046 20 19 19.1046 19 18V16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M16 12H20V16H16C14.8954 16 14 15.1046 14 14C14 12.8954 14.8954 12 16 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <circle cx="16" cy="14" r="1" fill="currentColor"/>
+            </svg></i>
+            Кошелек
+        </div>
+        <div class="footer-btn" onclick="showTrade()">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 17L9 11L13 15L21 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M17 7H21V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></i>
+            Торговля
+        </div>
+        <div class="footer-btn" onclick="showHistory()">
+            <i><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+            </svg></i>
+            История
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        // Проверяем аутентификацию
+        if (!API.checkAuth()) {
+            window.location.href = 'login.html';
+        }
+        
+        // Загружаем информацию о пользователе и баланс
+        async function loadUserInfo() {
+            try {
+                const user = await API.getUserInfo();
+                document.getElementById('balance').textContent = user.balance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Проверяем наличие уведомлений
+                loadNotifications(user.notifications || []);
+            } catch (error) {
+                console.error('Error loading user info:', error);
+                alert('Ошибка при загрузке информации');
+            }
+        }
+        
+        // Загружаем уведомления
+        function loadNotifications(notifications) {
+            const unreadNotifications = notifications.filter(n => !n.read);
+            
+            // Если есть непрочитанные уведомления, добавляем их на страницу
+            if (unreadNotifications.length > 0) {
+                const notificationsContainer = document.createElement('div');
+                notificationsContainer.className = 'notifications-container';
+                
+                unreadNotifications.forEach(notification => {
+                    const notificationElement = document.createElement('div');
+                    notificationElement.className = 'notification';
+                    notificationElement.innerHTML = `
+                        <div class="notification-content">
+                            <div class="notification-title">${notification.type === 'price_alert' ? 'Изменение цены' : 'Уведомление'}</div>
+                            <div class="notification-message">${notification.message}</div>
+                            <div class="notification-date">${new Date(notification.date).toLocaleString()}</div>
+                        </div>
+                        <button class="notification-close" onclick="markNotificationAsRead('${notification.id}')">×</button>
+                    `;
+                    
+                    notificationsContainer.appendChild(notificationElement);
+                });
+                
+                // Добавляем контейнер с уведомлениями на страницу
+                document.body.appendChild(notificationsContainer);
+                
+                // Добавляем стили для уведомлений
+                const style = document.createElement('style');
+                style.textContent = `
+                    .notifications-container {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        max-width: 350px;
+                        z-index: 1000;
+                    }
+                    .notification {
+                        background: var(--secondary-bg);
+                        border-radius: var(--card-radius);
+                        padding: 15px;
+                        margin-bottom: 10px;
+                        box-shadow: var(--card-shadow);
+                        position: relative;
+                        animation: slideIn 0.3s ease;
+                        display: flex;
+                        justify-content: space-between;
+                        border-left: 4px solid var(--accent-color);
+                    }
+                    .notification-title {
+                        font-weight: 600;
+                        margin-bottom: 5px;
+                        color: var(--accent-color);
+                    }
+                    .notification-message {
+                        font-size: 14px;
+                        margin-bottom: 5px;
+                    }
+                    .notification-date {
+                        font-size: 12px;
+                        color: rgba(255, 255, 255, 0.5);
+                    }
+                    .notification-close {
+                        background: transparent;
+                        border: none;
+                        color: rgba(255, 255, 255, 0.7);
+                        font-size: 20px;
+                        cursor: pointer;
+                        padding: 0 5px;
+                        align-self: flex-start;
+                    }
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes fadeOut {
+                        from { opacity: 1; transform: translateX(0); }
+                        to { opacity: 0; transform: translateX(100%); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+        
+        // Отмечаем уведомление как прочитанное
+        async function markNotificationAsRead(notificationId) {
+            try {
+                await API.markNotificationAsRead(notificationId);
+                const notification = document.querySelector(`.notification button[onclick*="${notificationId}"]`).parentNode;
+                notification.style.animation = 'fadeOut 0.3s ease forwards';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
+        }
+
+        // Функция для пополнения баланса
+        async function deposit() {
+            const amount = parseFloat(prompt('Введите сумму для пополнения:'));
+            if (amount && amount > 0) {
+                try {
+                    const data = await API.deposit(amount);
+                    document.getElementById('balance').textContent = data.balance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    alert(`Баланс успешно пополнен на ${amount.toFixed(2)}$`);
+                } catch (error) {
+                    console.error('Error depositing:', error);
+                    alert('Ошибка при пополнении: ' + error.message);
+                }
+            }
+        }
+
+        // Функция для вывода средств
+        async function withdraw() {
+            const amount = parseFloat(prompt('Введите сумму для вывода:'));
+            if (amount && amount > 0) {
+                try {
+                    // Проверяем, достаточно ли средств для вывода
+                    const user = await API.getUserInfo();
+                    if (user.balance < amount) {
+                        throw new Error('Недостаточно средств для вывода');
+                    }
+                    
+                    const data = await API.withdraw(amount);
+                    document.getElementById('balance').textContent = data.balance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    alert(`Средства успешно выведены: ${amount.toFixed(2)}$`);
+                } catch (error) {
+                    console.error('Error withdrawing:', error);
+                    alert('Ошибка при выводе: ' + error.message);
+                }
+            }
+        }
+        
+        // Загружаем информацию при загрузке страницы
+        document.addEventListener('DOMContentLoaded', loadUserInfo);
+        
+        // Добавляем кнопки пополнения и вывода
+        document.querySelector('.buttons-container').innerHTML += `
+            <div class="square-btn" onclick="deposit()">
+                <div class="circle-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5V19" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M19 12L12 5L5 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span>Пополнить</span>
+            </div>
+            <div class="square-btn" onclick="withdraw()">
+                <div class="circle-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 19V5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M5 12L12 19L19 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span>Вывести</span>
+            </div>
+        `;
+
+        function showWallet() {
+            window.location.href = 'index.html';
+        }
+
+        function showTrade() {
+            window.location.href = 'trade.html';
+        }
+
+        function showHistory() {
+            window.location.href = 'history.html';
+        }
+    </script>
+</body>
+</html>
